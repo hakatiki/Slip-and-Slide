@@ -1,9 +1,10 @@
 const canvas = document.querySelector('.myCanvas');
+const resetButton = document.getElementById('restart');
 const width = canvas.width = window.innerWidth;
 const height = canvas.height = window.innerHeight;
 
 const ctx = canvas.getContext('2d');
-
+ctx.translate(0.5, 0.5);
 // a function that clears the canvas
 function clearCanvas() {
     ctx.fillStyle = 'rgb(70, 70, 70)';
@@ -42,6 +43,7 @@ class Lines {
             ctx.strokeStyle = 'rgb(255, 255, 255)';
             drawLine(this.points[i].x, this.points[i].y, this.points[i+1].x, this.points[i+1].y);
         }
+        
         drawLine(this.points[this.points.length-1].x, this.points[this.points.length-1].y, this.points[0].x, this.points[0].y);
     }
     setSide(side){
@@ -75,13 +77,14 @@ canvas.addEventListener('click', function (e) {
         isSecondPlaced = true;
         const diff_x = second_x - first_x;
         const diff_y = second_y - first_y;
+        if (diff_x*diff_x + diff_y*diff_y > 30){
         const plus_x = first_x + diff_x*1000.0;
         const plus_y = first_y + diff_y*1000.0;
 
         const minus_x = first_x - diff_x*1000.0;
         const minus_y = first_y - diff_y*1000.0;
         linesOfLines = cutShapes(plus_x, plus_y, minus_x, minus_y);
-        isAnimate = true;
+        isAnimate = true;}
     }
     else if (!isFirstPlaced) {
     const x = e.clientX;
@@ -91,7 +94,22 @@ canvas.addEventListener('click', function (e) {
     isFirstPlaced = true;
     }
 });
+// a function that returns a regular poligon with n side
+function getPoligon(n, offset){
+    const lines = new Lines();
+    for (let i = 0; i < n; i++){
+        let deg = i/n*Math.PI*2;
+        let x_add = Math.cos(deg+offset)*300;
+        let y_add = Math.sin(deg+offset)*300;
+        lines.add(center_x + x_add, center_y + y_add);
+    }
+    return lines;
+}
+resetButton.addEventListener('click', function(e){
+    const lines = getPoligon(Math.floor((Math.random()*10+3)), Math.random());
+    linesOfLines = [lines];  
 
+})
 function rhsOrLhs(lines, plus_x, plus_y, minus_x, minus_y ){
     for(let i = 0; i < lines.points.length; i++){
         area = getArea(lines.points[i],  new Point(plus_x, plus_y), new Point(minus_x, minus_y));

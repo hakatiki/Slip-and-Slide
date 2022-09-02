@@ -4,3 +4,13 @@ body {
     margin-right: 0px;
     margin-left: 0px;
   }
+html, body {margin: 0; height: 100%; overflow: hidden}
+
+input{
+    color: rgb(70,70,70);
+    font-size: 2em;
+    background-color: darkgrey;
+    border: 0px solid #000;
+    border-radius: 5px;
+    size: 80px;
+}
